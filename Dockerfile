@@ -6,8 +6,8 @@ LABEL Name="Movie Service" \
 EXPOSE 8080
 
 RUN mkdir /container
-COPY build/libs/bookmyshow-0.0.1-SNAPSHOT.jar /container/carts-api.jar
+COPY build/libs/bookmyshow-0.0.1-SNAPSHOT.jar /container/showtimes-api.jar
 
 WORKDIR /container
 
-ENTRYPOINT exec java $JAVA_OPTS -jar carts-api.jar
+ENTRYPOINT exec java $JAVA_OPTS -jar showtimes-api.jar
