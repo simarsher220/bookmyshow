@@ -19,19 +19,19 @@ public class Theatre implements Serializable {
     private String city;
     private Integer pincode;
     private Set<Show> shows;
-    private Set<Seat> seats;
+//    private Set<Seat> seats;
 
     public Theatre() {
     }
 
-    public Theatre(Integer theatreId, String theatreName, String theatreLocation, String city, Integer pincode, Set<Show> shows, Set<Seat> seats) {
+    public Theatre(Integer theatreId, String theatreName, String theatreLocation, String city, Integer pincode, Set<Show> shows) {
         this.theatreId = theatreId;
         this.theatreName = theatreName;
         this.theatreLocation = theatreLocation;
         this.city = city;
         this.pincode = pincode;
         this.shows = shows;
-        this.seats = seats;
+//        this.seats = seats;
     }
 
     @Id
@@ -95,13 +95,13 @@ public class Theatre implements Serializable {
         this.shows = shows;
     }
 
-    @OneToMany(mappedBy = "theatre")
-    @JsonIgnore
-    public Set<Seat> getSeats() {
-        return seats;
-    }
-
-    public void setSeats(Set<Seat> seats) {
-        this.seats = seats;
-    }
+//    @OneToMany(mappedBy = "theatre")
+//    @JsonIgnore
+//    public Set<Seat> getSeats() {
+//        return seats;
+//    }
+//
+//    public void setSeats(Set<Seat> seats) {
+//        this.seats = seats;
+//    }
 }

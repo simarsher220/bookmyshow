@@ -6,10 +6,12 @@ import com.example.bookmyshow.dao.TheatreRepository;
 import com.example.bookmyshow.entity.Movie;
 import com.example.bookmyshow.entity.Show;
 import com.example.bookmyshow.entity.Theatre;
+import com.example.bookmyshow.error.exception.GenericException;
 import com.example.bookmyshow.mapper.MovieMapper;
 import com.example.bookmyshow.dto.MovieDto;
 import com.example.bookmyshow.dto.MoviesDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,38 +27,69 @@ public class MovieService {
     @Autowired
     private ShowRepository showRepository;
 
-    public MoviesDto getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
+    public MoviesDto getAllMovies() throws GenericException {
+        List<Movie> movies = null;
+        try {
+            movies = movieRepository.findAll();
+            if (movies == null) {
+                throw new Exception("Movies not found!!");
+            }
+        }
+        catch (Exception ex) {
+            throw new GenericException(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
         List<MovieDto> movieDtos = MovieMapper.getMovieDtosFromMovies(movies);
         MoviesDto moviesDto = new MoviesDto();
         moviesDto.setMovies(movieDtos);
         return moviesDto;
     }
 
-    public MovieDto getMovieById(Integer movieId) {
-        Movie movie = movieRepository.findMovieById(movieId);
-        if (movie == null) {
-            // error handling
+    public MovieDto getMovieById(Integer movieId) throws GenericException {
+        Movie movie = null;
+        try {
+            movie = movieRepository.findMovieById(movieId);
+            if (movie == null) {
+                throw new Exception("Movie not found!!");
+            }
+
+        }
+        catch (Exception ex) {
+            throw new GenericException(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
         return MovieMapper.getMovieDtoFromMovie(movie);
     }
 
-    public Movie addMovie(MovieDto movieDto) {
+    public MovieDto addMovie(MovieDto movieDto) throws GenericException {
         Movie movie = MovieMapper.getMovieFromMovieDto(movieDto);
-        movie = movieRepository.saveAndFlush(movie);
-        return movie;
+        try {
+            movie = movieRepository.saveAndFlush(movie);
+        }
+        catch (Exception ex) {
+            throw new GenericException(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return MovieMapper.getMovieDtoFromMovie(movie);
     }
 
     public void removeMovie(Integer movieId) {
         movieRepository.deleteById(movieId);
     }
 
-    public MoviesDto getMoviesByTheatre(Integer theatreId) {
-        Theatre theatre = theatreRepository.findTheatreById(theatreId);
-        List<Show> shows = showRepository.findAllByTheatre(theatre);
+    public MoviesDto getMoviesByTheatre(Integer theatreId) throws GenericException {
         List<Movie> movies = new ArrayList<>();
-        if (shows == null) {
-
+        Theatre theatre = null;
+        List<Show> shows = null;
+        try {
+            theatre = theatreRepository.findTheatreById(theatreId);
+            if (theatre == null) {
+                throw new Exception("Theatre not found!!");
+            }
+            shows = showRepository.findAllByTheatre(theatre);
+            if (shows == null) {
+                throw new Exception("Shows not found!!");
+            }
+        }
+        catch (Exception ex) {
+            throw new GenericException(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
         for (Show show : shows) {
             if (!movies.contains(show.getMovie())) {
@@ -68,16 +101,27 @@ public class MovieService {
         return moviesDto;
     }
 
-    public MoviesDto getMoviesByCity(String city) {
-        List<Theatre> theatres = theatreRepository.findAllByCity(city);
+    public MoviesDto getMoviesByCity(String city) throws GenericException {
         List<Movie> movies = new ArrayList<>();
-        for (Theatre theatre : theatres) {
-            List<Show> shows = showRepository.findAllByTheatre(theatre);
-            for (Show show : shows) {
-                if (!movies.contains(show.getMovie())) {
-                    movies.add(show.getMovie());
+        try {
+            List<Theatre> theatres = theatreRepository.findAllByCity(city);
+            if (theatres == null) {
+                throw new Exception("Theatres not found!!");
+            }
+            for (Theatre theatre : theatres) {
+                List<Show> shows = showRepository.findAllByTheatre(theatre);
+                if (shows == null) {
+                    throw new Exception("Shows not found!!");
+                }
+                for (Show show : shows) {
+                    if (!movies.contains(show.getMovie())) {
+                        movies.add(show.getMovie());
+                    }
                 }
             }
+        }
+        catch (Exception ex) {
+            throw new GenericException(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
         MoviesDto moviesDto = new MoviesDto();
         moviesDto.setMovies(MovieMapper.getMovieDtosFromMovies(movies));
