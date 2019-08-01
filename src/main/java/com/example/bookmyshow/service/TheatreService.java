@@ -61,6 +61,9 @@ public class TheatreService {
     public TheatreDto addTheatre(TheatreDto theatreDto) throws GenericException {
         Theatre theatre = TheatreMapper.getTheatreFromTheatreDto(theatreDto);
         try {
+            if (!(theatre.getCity().equals("Bengaluru") || theatre.getCity().equals("Lucknow") || theatre.getCity().equals("Mumbai") || theatre.getCity().equals("Delhi"))) {
+                throw new Exception("Invalid City!!");
+            }
             theatre = theatreRepository.saveAndFlush(theatre);
             if (theatre == null) {
                 throw new Exception("Couldn't insert theatre!!");

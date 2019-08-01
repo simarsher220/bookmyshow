@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.sql.Date;
 
 @RestController
 public class ShowsController {
@@ -33,7 +33,7 @@ public class ShowsController {
     }
 
     @GetMapping(value = "/showsBy")
-    public TheatresShowsDto getShowsByMovieCityDate(@RequestParam("movie_id") Integer movieId, @RequestParam("city") String city, @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) throws GenericException {
+    public TheatresShowsDto getShowsByMovieCityDate(@RequestParam("movie_id") Integer movieId, @RequestParam("city") String city, @RequestParam("date") Date date) throws GenericException {
         return showService.getShowsByMovieAndCityAndDate(movieId, city, date);
     }
 }

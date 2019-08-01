@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -125,9 +125,8 @@ public class ShowService {
             if (shows == null) {
                 throw new Exception("Movie not found!!");
             }
-            date = ShowMapper.getZeroTimeDate(date);
             for (Show show : shows) {
-                Date compDate = ShowMapper.getZeroTimeDate(show.getId().getDate());
+                Date compDate = show.getId().getDate();
                 if (compDate.equals(date)) {
                     showFilter.add(show);
                 }

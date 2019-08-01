@@ -8,19 +8,19 @@ import com.example.bookmyshow.entity.Theatre;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class ShowMapper {
 
     public static Show getShowFromShowDtoRequest(Movie movie, Theatre theatre, Date date, Time time) {
-        Show show = new Show(theatre, movie, getZeroTimeDate(date), time);
+        Show show = new Show(theatre, movie, date, time);
         return show;
     }
 
     public static ShowDto getShowDtoFromShow(Show show) {
         ShowDto showDto = new ShowDto();
-        showDto.setDate(getZeroTimeDate(show.getId().getDate()));
+        showDto.setDate(show.getId().getDate());
         showDto.setTime(show.getId().getTime());
         return showDto;
     }
@@ -33,14 +33,14 @@ public class ShowMapper {
         return showDtos;
     }
 
-    public static Date getZeroTimeDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        date = calendar.getTime();
-        return date;
-    }
+//    public static Date getZeroTimeDate(Date date) {
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(date);
+//        calendar.set(Calendar.HOUR_OF_DAY, 0);
+//        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.SECOND, 0);
+//        calendar.set(Calendar.MILLISECOND, 0);
+//        date = calendar.getTime();
+//        return date;
+//    }
 }

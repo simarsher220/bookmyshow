@@ -15,7 +15,7 @@ public class MovieDto {
     private String moviePoster;
     private Integer length;
 
-    @JsonProperty("movieId")
+    @JsonProperty("movie_id")
     public Integer getMovieId() {
         return movieId;
     }
