@@ -44,7 +44,7 @@ public class TheatreShowsDto {
         this.theatreLocation = theatreLocation;
     }
 
-    @JsonProperty("string")
+    @JsonProperty("city")
     public String getCity() {
         return city;
     }

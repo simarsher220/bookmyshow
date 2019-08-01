@@ -10,6 +10,7 @@ import com.example.bookmyshow.entity.Theatre;
 import com.example.bookmyshow.error.exception.GenericException;
 import com.example.bookmyshow.mapper.MovieMapper;
 import com.example.bookmyshow.mapper.ShowMapper;
+import com.example.bookmyshow.mapper.TheatreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,7 @@ public class ShowService {
             }
         }
         catch (Exception e) {
-            throw new GenericException(e.getMessage(), HttpStatus.NOT_FOUND);
+            throw new GenericException(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         Show show = ShowMapper.getShowFromShowDtoRequest(movie, theatre, showDto.getDate(), showDto.getTime());
         try {
@@ -76,11 +77,11 @@ public class ShowService {
             }
         }
         catch (Exception e) {
-            throw new GenericException(e.getMessage(), HttpStatus.NOT_FOUND);
+            throw new GenericException(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         ShowsDto showsDto = new ShowsDto();
-        showsDto.setMovie(show.getMovie());
-        showsDto.setTheatre(show.getTheatre());
+        showsDto.setMovie(MovieMapper.getMovieDtoFromMovie(show.getMovie()));
+        showsDto.setTheatre(TheatreMapper.getTheatreDtoFromTheatre(show.getTheatre()));
         showsDto.setShowDtos(ShowMapper.getShowsDtoFromShows(Collections.singletonList(show)));
         return showsDto;
     }
@@ -99,7 +100,7 @@ public class ShowService {
             }
         }
         catch (Exception e) {
-            throw new GenericException(e.getMessage(), HttpStatus.NOT_FOUND);
+            throw new GenericException(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         Show show = ShowMapper.getShowFromShowDtoRequest(movie, theatre, showDto.getDate(), showDto.getTime());
         try {
@@ -149,8 +150,8 @@ public class ShowService {
             if (theatre == null) {
                 throw new Exception("Movie not found");
             }
-            showsDto.setMovie(movie);
-            showsDto.setTheatre(theatre);
+            showsDto.setMovie(MovieMapper.getMovieDtoFromMovie(movie));
+            showsDto.setTheatre(TheatreMapper.getTheatreDtoFromTheatre(theatre));
             showsDto.setShowDtos(getShowListByMovieAndTheatreAndDate(movieId, theatreId, date));
         }
         catch (Exception e) {

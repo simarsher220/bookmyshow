@@ -12,25 +12,25 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ShowsDto {
 
-    private Movie movie;
-    private Theatre theatre;
+    private MovieDto movie;
+    private TheatreDto theatre;
     private List<ShowDto> showDtos;
 
     @JsonProperty("movie")
-    public Movie getMovie() {
+    public MovieDto getMovie() {
         return movie;
     }
 
-    public void setMovie(Movie movie) {
+    public void setMovie(MovieDto movie) {
         this.movie = movie;
     }
 
     @JsonProperty("theatre")
-    public Theatre getTheatre() {
+    public TheatreDto getTheatre() {
         return theatre;
     }
 
-    public void setTheatre(Theatre theatre) {
+    public void setTheatre(TheatreDto theatre) {
         this.theatre = theatre;
     }
 
