@@ -3,8 +3,12 @@ plugins {
 	id 'java'
 }
 
+//configurations {
+//	jar.archiveName = 'spring-boot-in-docker.jar'
+//}
+
 apply plugin: 'io.spring.dependency-management'
-apply from: 'docker.gradle'
+//apply from: 'docker.gradle'
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
@@ -14,6 +18,9 @@ configurations {
 	developmentOnly
 	runtimeClasspath {
 		extendsFrom developmentOnly
+		bootJar {
+			archiveFileName = 'spring-boot-in-docker.jar'
+		}
 	}
 }
 
