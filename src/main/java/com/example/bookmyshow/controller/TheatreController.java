@@ -1,12 +1,19 @@
 package com.example.bookmyshow.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.bookmyshow.dto.TheatreDto;
 import com.example.bookmyshow.dto.TheatresDto;
 import com.example.bookmyshow.error.exception.GenericException;
 import com.example.bookmyshow.service.TheatreService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class TheatreController {
@@ -26,7 +33,7 @@ public class TheatreController {
 
     @PostMapping(value = "/theatres/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public TheatreDto addNewTheatre(@RequestBody TheatreDto theatreDto) throws GenericException {
-        return theatreService.addTheatre(theatreDto);
+		return theatreService.addTheatre(theatreDto);
     }
 
     @DeleteMapping(value = "/theatres/{theatreId}/delete")

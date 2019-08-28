@@ -1,9 +1,17 @@
 package com.example.bookmyshow.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
 import com.example.bookmyshow.dao.MovieRepository;
 //import com.example.bookmyshow.dao.SeatRepository;
 import com.example.bookmyshow.dao.ShowRepository;
 import com.example.bookmyshow.dao.TheatreRepository;
+import com.example.bookmyshow.dto.TheatreDto;
 import com.example.bookmyshow.dto.TheatresDto;
 import com.example.bookmyshow.entity.Movie;
 //import com.example.bookmyshow.entity.Seat;
@@ -11,15 +19,6 @@ import com.example.bookmyshow.entity.Show;
 import com.example.bookmyshow.entity.Theatre;
 import com.example.bookmyshow.error.exception.GenericException;
 import com.example.bookmyshow.mapper.TheatreMapper;
-import com.example.bookmyshow.dto.TheatreDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class TheatreService {
@@ -30,6 +29,9 @@ public class TheatreService {
     private MovieRepository movieRepository;
     @Autowired
     private ShowRepository showRepository;
+    @Autowired
+    private CityService cityService;
+    
 //    @Autowired
 //    private SeatRepository seatRepository;
 
@@ -60,28 +62,16 @@ public class TheatreService {
 
     public TheatreDto addTheatre(TheatreDto theatreDto) throws GenericException {
         Theatre theatre = TheatreMapper.getTheatreFromTheatreDto(theatreDto);
+        validateCity(theatre);
+        String errorMessage = "Couldn't add the theatre!!";
         try {
-            if (!(theatre.getCity().equals("Bengaluru") || theatre.getCity().equals("Lucknow") || theatre.getCity().equals("Mumbai") || theatre.getCity().equals("Delhi"))) {
-                throw new Exception("Invalid City!!");
-            }
-            theatre = theatreRepository.saveAndFlush(theatre);
+        	theatre = theatreRepository.saveAndFlush(theatre);
             if (theatre == null) {
-                throw new Exception("Couldn't insert theatre!!");
+            	throw new Exception(errorMessage);
             }
+		} catch (Exception e) {
+			throw new GenericException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        catch (Exception e) {
-            throw new GenericException(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-//        Set<Seat> seats = new HashSet<>();
-//        for (int c=65; c<=74; c++) {
-//            for (int s=1; s<=10; s++) {
-//                Seat seat = new Seat(theatre, (char) c, s, false);
-//                seat = seatRepository.saveAndFlush(seat);
-//                seats.add(seat);
-//            }
-//        }
-//        theatre.setSeats(seats);
-//        theatre = theatreRepository.saveAndFlush(theatre);
         return TheatreMapper.getTheatreDtoFromTheatre(theatre);
     }
 
@@ -107,4 +97,21 @@ public class TheatreService {
         }
         return TheatreMapper.getTheatreDtosFromTheatres(theatres);
     }
+    
+    private void validateCity(Theatre theatre) throws GenericException {
+		boolean validCity = false;
+        String[] cities = cityService.getAllCities();
+        if (cities != null && cities.length > 0) {
+        	for (int i = 0; i < cities.length; i++) {
+				String city = cities[i];
+				if (theatre.getCity().equals(city)) {
+					validCity = true;
+					break;
+				}
+			}
+        }
+        if (!validCity) {
+        	throw new GenericException("Invalid City!!", HttpStatus.BAD_REQUEST);
+        }
+	}
 }
