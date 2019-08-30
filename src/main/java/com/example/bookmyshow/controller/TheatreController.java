@@ -1,5 +1,7 @@
 package com.example.bookmyshow.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +29,8 @@ public class TheatreController {
     }
 
     @GetMapping(value = "/theatres/{movieId}")
-    public void getTheatreByMovieId(@PathVariable("movieId") Integer movieId) throws GenericException {
-        theatreService.getTheatresByMovieId(movieId);
+    public List<TheatreDto> getTheatreByMovieId(@PathVariable("movieId") Integer movieId) throws GenericException {
+        return theatreService.getTheatresByMovieId(movieId);
     }
 
     @PostMapping(value = "/theatres/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
