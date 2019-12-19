@@ -1,5 +1,6 @@
 package com.example.bookmyshow.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ public class CityController {
     private CityService cityService;
 
     @GetMapping(value = "/cities/")
+    @ApiOperation("Get all cities")
     public String[] getAllCities() throws GenericException {
         return cityService.getAllCities();
     }

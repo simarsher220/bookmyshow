@@ -33,7 +33,7 @@ public class Movie {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "movie_id")
     public Integer getMovieId() {
         return movieId;
